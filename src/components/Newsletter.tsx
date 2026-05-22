@@ -1,18 +1,41 @@
 import { useState } from 'react';
-import { Mail, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Mail, ArrowRight, CheckCircle2, Loader2 } from 'lucide-react';
+
+const SUBSCRIBE_URL = 'https://andy2025ai--pufeng-geo-diagnosis-v3-fastapi-app.modal.run/api/subscribe';
 
 export default function Newsletter() {
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email.trim()) {
-      setIsSubscribed(true);
-      setTimeout(() => {
-        setEmail('');
-        setIsSubscribed(false);
-      }, 3000);
+    if (!email.trim() || loading) return;
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const res = await fetch(SUBSCRIBE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setIsSubscribed(true);
+        setTimeout(() => {
+          setEmail('');
+          setIsSubscribed(false);
+        }, 3000);
+      } else {
+        setError(data.error || '订阅失败');
+      }
+    } catch {
+      setError('网络错误，请稍后重试');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,16 +75,23 @@ export default function Newsletter() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="输入您的邮箱地址"
                     required
-                    className="flex-1 px-6 py-4 bg-dark border border-white/10 rounded-full text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 transition-all duration-300"
+                    disabled={loading}
+                    className="flex-1 px-6 py-4 bg-dark border border-white/10 rounded-full text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 transition-all duration-300 disabled:opacity-50"
                   />
                   <button
                     type="submit"
-                    className="btn-primary px-8 py-4 rounded-full text-white font-semibold flex items-center justify-center space-x-2 whitespace-nowrap"
+                    disabled={loading}
+                    className="btn-primary px-8 py-4 rounded-full text-white font-semibold flex items-center justify-center space-x-2 whitespace-nowrap disabled:opacity-50"
                   >
-                    <span>订阅</span>
-                    <ArrowRight size={20} />
+                    {loading ? (
+                      <Loader2 size={20} className="animate-spin" />
+                    ) : (
+                      <ArrowRight size={20} />
+                    )}
+                    <span>{loading ? '提交中…' : '订阅'}</span>
                   </button>
                 </div>
+                {error && <p className="text-red-400 text-sm mt-3">{error}</p>}
               </form>
             )}
 
