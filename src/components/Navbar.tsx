@@ -16,6 +16,7 @@ export default function Navbar() {
 
   const navLinks = [
     { name: '首页', path: '/' },
+    { name: '专栏', path: '/column' },
     { name: 'GEO服务', path: '/services/geo' },
     { name: 'FDE服务', path: '/services/fde' },
     { name: '案例', path: '/cases' },

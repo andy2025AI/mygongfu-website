@@ -19,7 +19,7 @@ export default function FounderSection() {
                       <div className="w-48 h-48 mx-auto rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-4">
                         <span className="text-6xl font-bold text-white">张</span>
                       </div>
-                      <p className="text-gray-400">创始人照片占位</p>
+                      <p className="text-gray-400">创始人</p>
                     </div>
                   </div>
                 </div>
@@ -39,9 +39,9 @@ export default function FounderSection() {
               </h2>
 
               <blockquote className="text-xl text-gray-300 mb-8 leading-relaxed">
-                "当AI搜索开始改变人们获取信息的方式时，我发现很多传统的品牌营销方法正在失效。
-                品牌需要一种全新的方式来在AI时代被发现和推荐。这就是朴风诞生的原因——
-                我们要帮助品牌在AI搜索中占据有利位置。"
+                "做了13年景观设计，我比大多数人都更清楚"被搜不到"是什么感觉。
+                当AI搜索开始替代传统搜索，我发现自己13年积累的品牌认知在AI里就是一张白纸。
+                朴风GEO就是从这里开始的——先拿自己开刀，跑通了再帮别人做。"
               </blockquote>
 
               <div className="space-y-6">
@@ -51,22 +51,22 @@ export default function FounderSection() {
                   </div>
                   <div>
                     <h4 className="text-xl font-bold text-white">老张</h4>
-                    <p className="text-gray-400">朴风创始人 & AI搜索优化专家</p>
+                    <p className="text-gray-400">一人公司AI系统工程师</p>
                   </div>
                 </div>
 
                 <div className="flex space-x-6 pt-4 border-t border-white/10">
                   <div>
-                    <div className="text-2xl font-bold gradient-text">10+</div>
-                    <div className="text-gray-400 text-sm">年行业经验</div>
+                    <div className="text-2xl font-bold gradient-text">13</div>
+                    <div className="text-gray-400 text-sm">年一人公司实战</div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold gradient-text">500+</div>
-                    <div className="text-gray-400 text-sm">服务品牌</div>
+                    <div className="text-2xl font-bold gradient-text">1</div>
+                    <div className="text-gray-400 text-sm">个人独资企业</div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold gradient-text">300%</div>
-                    <div className="text-gray-400 text-sm">平均增长</div>
+                    <div className="text-2xl font-bold gradient-text">1</div>
+                    <div className="text-gray-400 text-sm">个人FDE服务</div>
                   </div>
                 </div>
               </div>

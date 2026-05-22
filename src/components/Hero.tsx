@@ -77,18 +77,9 @@ export default function Hero() {
             </div>
           </form>
 
-          <div className="mt-12 grid grid-cols-3 gap-8 max-w-2xl mx-auto fade-in-up" style={{ animationDelay: '1s' }}>
-            <div className="text-center">
-              <div className="text-3xl font-bold gradient-text">15+</div>
-              <div className="text-gray-400 text-sm mt-1">AI平台覆盖</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold gradient-text">200%</div>
-              <div className="text-gray-400 text-sm mt-1">品牌提升</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold gradient-text">98%</div>
-              <div className="text-gray-400 text-sm mt-1">客户满意</div>
+          <div className="mt-12 max-w-2xl mx-auto fade-in-up" style={{ animationDelay: '1s' }}>
+            <div className="text-gray-400 text-sm">
+              覆盖DeepSeek、豆包、Kimi、通义千问、文心一言、智谱清言、讯飞星火等国内主流AI平台
             </div>
           </div>
         </div>

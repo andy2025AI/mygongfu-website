@@ -4,6 +4,7 @@ import GeoService from "@/pages/GeoService";
 import FdeService from "@/pages/FdeService";
 import Cases from "@/pages/Cases";
 import About from "@/pages/About";
+import Column from "@/pages/Column";
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
         <Route path="/services/fde" element={<FdeService />} />
         <Route path="/cases" element={<Cases />} />
         <Route path="/about" element={<About />} />
+        <Route path="/column" element={<Column />} />
       </Routes>
     </Router>
   );
