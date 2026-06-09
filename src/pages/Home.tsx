@@ -1,125 +1,111 @@
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import ServiceCard from '../components/ServiceCard';
-import PricingCard from '../components/PricingCard';
 import FounderSection from '../components/FounderSection';
 import Newsletter from '../components/Newsletter';
 import Footer from '../components/Footer';
+import { ArrowDown } from 'lucide-react';
 
 export default function Home() {
   const services = [
     {
       icon: 'search' as const,
-      title: '朴风GEO · AI可见度优化',
-      description: '提升你的品牌在DeepSeek、豆包、Kimi等AI搜索平台的可见度，让AI主动推荐你的品牌。',
+      title: '朴风GEO · AI可见度诊断',
+      description: '品牌在AI搜索里还活着吗？一键扫描DeepSeek、豆包、Kimi等15+AI引擎，获取品牌可见度完整报告。',
       features: [
-        '15+ AI平台全面覆盖',
+        '15+ AI引擎全面覆盖',
         '品牌提及率深度分析',
         '情感倾向智能评估',
-        '专属优化建议报告',
+        '竞品对比与优化路线图',
       ],
-      path: '/services/geo',
+      path: '/geo/',
       gradient: 'bg-gradient-to-br from-primary to-primary-dark',
+      price: '¥299',
+      cta: '立即诊断',
     },
     {
       icon: 'bot' as const,
-      title: 'FDE · AI系统工程师',
-      description: '一人公司的AI技术合伙人，帮你搭建AI工作流、自动化系统、效率工具，释放人力，聚焦核心。',
+      title: 'FDE · AI系统搭建',
+      description: '一人公司的AI技术合伙人。从系统诊断到Agent部署，帮你搭建全套AI工作流，释放人力聚焦核心。',
       features: [
-        '定制化AI工作流搭建',
-        '业务流程自动化',
-        '智能助手开发',
-        '持续技术支持',
+        'FSD系统诊断',
+        '定制AI工作流搭建',
+        'Agent开发+工具链接入',
+        '2周调优+持续技术支持',
       ],
-      path: '/services/fde',
+      path: '/fde/',
       gradient: 'bg-gradient-to-br from-secondary to-secondary-dark',
-    },
-  ];
-
-  const pricingPlans = [
-    {
-      name: 'AI可见度诊断',
-      price: '¥99',
-      description: '快速了解你的品牌在AI搜索中的表现',
-      features: [
-        '7大AI平台诊断',
-        '品牌提及率分析',
-        '核心优化建议',
-        '48小时内交付PDF',
-      ],
-      buttonText: '立即诊断',
+      price: '¥999~¥68,000',
+      cta: '了解详情',
     },
     {
-      name: 'GEO Core',
-      price: '¥6,000',
-      description: '适合成长中的品牌',
+      icon: 'leaf' as const,
+      title: '朴风景观AI · 植物配置助手',
+      description: '输入项目条件，AI智能推荐最佳植物配置方案。23年景观设计经验训练的专业Agent，面向设计师和业主。',
       features: [
-        '月度品牌可见度报告',
-        'AI内容策略与撰写',
-        '品牌关键词优化',
-        '竞品可见度对比',
-        '每月2次咨询',
+        '乔木/灌木/地被/棕榈四层知识库',
+        '项目条件智能匹配',
+        '华南气候优先优化',
+        '配置方案+养护建议一键生成',
       ],
-      isPopular: true,
-      buttonText: '开始使用',
-    },
-    {
-      name: 'GEO Pro',
-      price: '¥18,000',
-      description: '专业级品牌AI营销服务',
-      features: [
-        '全部Core功能',
-        '内容创作与分发',
-        '全平台关系管理',
-        '季度战略复盘',
-        '专属顾问服务',
-        '无限次咨询',
-      ],
-      buttonText: '联系我们',
+      path: 'https://pufeng.mygongfu.com',
+      gradient: 'bg-gradient-to-br from-[#00E676] to-[#00C853]',
+      price: '¥18,000/次',
+      cta: '了解详情',
     },
   ];
 
   return (
-    <div className="min-h-screen bg-dark">
+    <div className="min-h-screen bg-black">
       <Navbar />
       <Hero />
 
-      {/* Services Section */}
+      {/* 三产品线管道式布局 */}
       <section className="py-24 relative overflow-hidden">
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
-              <span className="gradient-text">我们的服务</span>
+              <span className="gold-text">一人公司AI工具箱</span>
             </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              从AI可见度优化到AI系统搭建，我们提供全方位的AI时代品牌增长解决方案
+            <p className="text-gray-400 text-base max-w-xl mx-auto leading-relaxed">
+              从景观设计师到AI系统工程师<br className="hidden sm:inline" />
+              GEO品牌诊断 · FDE系统搭建 · 植物配置AI
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {services.map((service, index) => (
-              <ServiceCard key={index} {...service} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section className="py-24 bg-dark-light/50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold mb-4">
-              <span className="gradient-text">GEO品牌可见度服务</span>
-            </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              选择适合你的方案，开启AI搜索时代的品牌增长之旅
-            </p>
-          </div>
-
+          {/* 三列管道 */}
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {pricingPlans.map((plan, index) => (
-              <PricingCard key={index} {...plan} />
+            {services.map((service, index) => (
+              <div key={index} className="relative">
+                <ServiceCard {...service} />
+                {/* 管道连接箭头（桌面端显示） */}
+                {index < services.length - 1 && (
+                  <div className="hidden md:flex absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
+                    <ArrowDown className="text-white/20 -rotate-90" size={32} />
+                  </div>
+                )}
+                {/* 移动端箭头 */}
+                {index < services.length - 1 && (
+                  <div className="flex md:hidden justify-center py-2">
+                    <ArrowDown className="text-white/20" size={24} />
+                  </div>
+                )}
+              </div>
             ))}
+          </div>
+
+          {/* 底部管道流程说明 */}
+          <div className="text-center mt-16">
+            <div className="inline-flex items-center gap-2 bg-black px-6 py-3 rounded-full border border-white/10">
+              <span className="text-gray-500 text-sm">📋 诊断</span>
+              <span className="text-[#FFD700]">→</span>
+              <span className="text-gray-500 text-sm">🔧 搭建</span>
+              <span className="text-[#FFD700]">→</span>
+              <span className="text-gray-300 text-sm">🌿 行业应用</span>
+            </div>
+            <p className="text-gray-500 text-sm mt-4">
+              不是「平台」，是帮人做出好景观的AI工具站
+            </p>
           </div>
         </div>
       </section>

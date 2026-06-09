@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>植物配置AI助手 · 朴风景观</title>
+<meta name="description" content="输入项目条件，AI智能推荐最佳植物配置方案。23年景观设计经验训练的专业AI Agent，覆盖乔木、灌木、地被、棕榈四层知识库。">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://pufeng.mygongfu.com/">
+<style>
+  :root {
+    --bg: #000000;
+    --card: #0D0D0D;
+    --border: rgba(255,255,255,0.08);
+    --gold: #FFD700;
+    --green: #00E676;
+    --text: #E5E5E5;
+    --text-muted: #9CA3AF;
+    --text-dim: #6B7280;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 900px; margin:0 auto; padding: 0 20px; }
+
+  /* Nav */
+  nav {
+    position: fixed; top:0; left:0; right:0; z-index:50;
+    background: rgba(0,0,0,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  nav .inner { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; max-width:900px; margin:0 auto; }
+  nav .logo { display:flex; align-items:center; gap:8px; text-decoration:none; }
+  nav .logo .mark { width:36px; height:36px; background:var(--gold); border-radius:8px; display:flex; align-items:center; justify-content:center; }
+  nav .logo .mark span { color:#000; font-weight:bold; font-size:20px; }
+  nav .logo .name { color:var(--gold); font-weight:bold; font-size:18px; letter-spacing:-0.5px; }
+  nav .cta { background:var(--gold); color:#000; padding:8px 20px; border-radius:999px; font-weight:600; font-size:14px; text-decoration:none; transition:opacity .2s; }
+  nav .cta:hover { opacity:.85; }
+
+  /* Sections */
+  section { padding: 80px 0; }
+
+  /* Hero */
+  .hero { padding-top:140px; text-align:center; }
+  .hero .badge { display:inline-flex; align-items:center; gap:6px; background:rgba(0,230,118,0.1); border:1px solid rgba(0,230,118,0.2); border-radius:999px; padding:6px 18px; font-size:14px; color:var(--green); margin-bottom:24px; }
+  .hero .badge .dot { width:6px; height:6px; background:var(--green); border-radius:50%; animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+  .hero h1 { font-size:clamp(32px,6vw,56px); font-weight:800; line-height:1.2; margin-bottom:20px; }
+  .hero h1 .gold { color:var(--gold); }
+  .hero h1 .green { color:var(--green); }
+  .hero .sub { font-size:18px; color:var(--text-muted); max-width:600px; margin:0 auto 36px; line-height:1.7; }
+  .hero .actions { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .btn-gold { background:var(--gold); color:#000; padding:14px 32px; border-radius:999px; font-weight:700; font-size:16px; text-decoration:none; transition:all .2s; display:inline-flex; align-items:center; gap:8px; cursor:pointer; border:none; font-family:inherit; }
+  .btn-gold:hover { opacity:.85; transform:translateY(-1px); }
+  .btn-outline { border:1px solid rgba(255,255,255,0.3); color:var(--text); padding:14px 32px; border-radius:999px; font-weight:600; font-size:16px; text-decoration:none; transition:all .2s; }
+  .btn-outline:hover { border-color:var(--gold); color:var(--gold); }
+
+  /* Toast */
+  .toast {
+    position:fixed; bottom:32px; left:50%; transform:translateX(-50%);
+    background:var(--green); color:#000; padding:12px 28px; border-radius:999px;
+    font-weight:600; font-size:14px; z-index:100; opacity:0; pointer-events:none;
+    transition:opacity .3s, transform .3s; transform:translateX(-50%) translateY(10px);
+  }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  .toast.error { background:#FF4444; color:#fff; }
+
+  /* How it works */
+  .how { background:var(--card); }
+  .how h2, .kb h2, .pricing h2, .cta-section h2 { text-align:center; font-size:clamp(28px,5vw,40px); font-weight:800; margin-bottom:16px; }
+  .how h2 .gold, .kb h2 .gold, .pricing h2 .gold, .cta-section h2 .gold { color:var(--gold); }
+  .section-sub { text-align:center; color:var(--text-muted); font-size:16px; margin-bottom:48px; max-width:500px; margin-left:auto; margin-right:auto; }
+  .steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:24px; }
+  .step { background:#000; border:1px solid var(--border); border-radius:16px; padding:32px 24px; text-align:center; transition:border-color .2s; }
+  .step:hover { border-color:rgba(0,230,118,0.3); }
+  .step .num { display:inline-flex; align-items:center; justify-content:center; width:48px; height:48px; border-radius:12px; font-weight:800; font-size:20px; margin-bottom:16px; }
+  .step:nth-child(1) .num { background:rgba(255,215,0,0.15); color:var(--gold); }
+  .step:nth-child(2) .num { background:rgba(0,230,118,0.15); color:var(--green); }
+  .step:nth-child(3) .num { background:rgba(255,215,0,0.15); color:var(--gold); }
+  .step h3 { font-size:18px; font-weight:700; margin-bottom:8px; color:#fff; }
+  .step p { color:var(--text-muted); font-size:14px; line-height:1.6; }
+
+  /* Knowledge Base */
+  .kb .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:20px; }
+  .kb-card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:28px 24px; text-align:center; transition:border-color .2s; }
+  .kb-card:hover { border-color:rgba(0,230,118,0.3); }
+  .kb-card .icon { font-size:36px; margin-bottom:12px; }
+  .kb-card h4 { color:#fff; font-size:18px; font-weight:700; margin-bottom:8px; }
+  .kb-card p { color:var(--text-muted); font-size:13px; line-height:1.5; }
+
+  /* Pricing */
+  .pricing-card { background:var(--card); border:1px solid rgba(0,230,118,0.2); border-radius:20px; padding:40px 32px; max-width:420px; margin:0 auto; text-align:center; }
+  .pricing-card .tier { font-size:14px; color:var(--green); font-weight:600; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+  .pricing-card .price { font-size:48px; font-weight:800; color:var(--gold); margin-bottom:4px; }
+  .pricing-card .period { color:var(--text-muted); font-size:14px; margin-bottom:24px; }
+  .pricing-card .desc { color:var(--text-muted); font-size:15px; line-height:1.7; margin-bottom:24px; }
+  .pricing-card ul { list-style:none; text-align:left; margin-bottom:32px; }
+  .pricing-card ul li { padding:8px 0; border-bottom:1px solid var(--border); color:var(--text-muted); font-size:14px; display:flex; align-items:center; gap:10px; }
+  .pricing-card ul li::before { content:'✓'; color:var(--green); font-weight:bold; flex-shrink:0; }
+
+  /* CTA */
+  .cta-section { background:var(--card); text-align:center; }
+  .cta-section .sub { color:var(--text-muted); font-size:16px; max-width:500px; margin:0 auto 32px; }
+
+  /* Form */
+  .eval-form { max-width:560px; margin:0 auto; }
+  .form-row { display:flex; gap:12px; margin-bottom:12px; flex-wrap:wrap; }
+  .form-row input, .form-row select { flex:1; min-width:180px; background:rgba(255,255,255,0.06); border:1px solid var(--border); border-radius:10px; padding:12px 16px; color:var(--text); font-size:15px; font-family:inherit; outline:none; transition:border-color .2s; }
+  .form-row input:focus, .form-row select:focus { border-color:var(--green); }
+  .form-row select { appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239CA3AF' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 16px center; padding-right:40px; color:var(--text-muted); }
+  .form-row select option { background:var(--card); color:var(--text); }
+  .form-row select.has-value { color:var(--text); }
+  .checks { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+  .checks label { display:flex; align-items:center; gap:6px; padding:8px 14px; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:999px; cursor:pointer; font-size:13px; color:var(--text-muted); transition:all .2s; }
+  .checks label:hover { border-color:rgba(0,230,118,0.3); }
+  .checks label input { display:none; }
+  .checks label:has(input:checked) { border-color:var(--green); color:var(--green); background:rgba(0,230,118,0.1); }
+  .form-row .full { flex-basis:100%; }
+
+  /* Result */
+  .result { display:none; max-width:600px; margin:32px auto 0; background:var(--card); border:1px solid var(--border); border-radius:16px; padding:32px; text-align:left; }
+  .result.show { display:block; animation:fadeIn .4s; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .result .grade-badge { display:inline-block; padding:4px 14px; border-radius:999px; font-weight:700; font-size:13px; margin-bottom:16px; }
+  .result .grade-badge.l1 { background:rgba(0,230,118,0.15); color:var(--green); }
+  .result .grade-badge.l2 { background:rgba(255,215,0,0.15); color:var(--gold); }
+  .result .grade-badge.l3 { background:rgba(255,68,68,0.15); color:#FF6666; }
+  .result h3 { font-size:22px; margin-bottom:8px; color:#fff; }
+  .result .score { font-size:36px; font-weight:800; color:var(--gold); margin-bottom:16px; }
+  .result .score span { font-size:16px; color:var(--text-muted); font-weight:400; }
+  .result .section-title { font-size:14px; font-weight:700; color:var(--text-muted); margin:20px 0 10px; text-transform:uppercase; letter-spacing:1px; }
+  .result .item { padding:8px 0; font-size:14px; color:var(--text-muted); line-height:1.6; border-bottom:1px solid rgba(255,255,255,0.04); }
+  .result .item:last-child { border-bottom:none; }
+  .result .cta-box { margin-top:24px; padding:20px; background:rgba(0,230,118,0.05); border:1px solid rgba(0,230,118,0.15); border-radius:12px; text-align:center; }
+  .result .cta-box p { color:var(--text); font-weight:600; margin-bottom:12px; }
+  .loading-text { text-align:center; color:var(--text-muted); padding:20px; }
+  .loading-text .spinner { display:inline-block; width:20px; height:20px; border:2px solid var(--border); border-top-color:var(--green); border-radius:50%; animation:spin .8s linear infinite; margin-right:8px; vertical-align:middle; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  footer { border-top:1px solid var(--border); padding:32px 0; text-align:center; color:var(--text-dim); font-size:13px; }
+  footer a { color:var(--text-muted); text-decoration:none; }
+  footer a:hover { color:var(--gold); }
+  footer .links { display:flex; justify-content:center; gap:24px; margin-bottom:16px; }
+
+  @media (max-width:640px) {
+    section { padding:60px 0; }
+    .hero { padding-top:120px; }
+    .steps { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="inner">
+    <a href="https://mygongfu.com" class="logo">
+      <div class="mark"><span>朴</span></div>
+      <span class="name">朴风 Pu Feng</span>
+    </a>
+    <button onclick="copyEmail()" class="cta" style="background:var(--gold);color:#000;padding:8px 20px;border-radius:999px;font-weight:600;font-size:14px;border:none;cursor:pointer;font-family:inherit;">📋 复制邮箱</button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="badge"><span class="dot"></span> AI辅助景观设计</div>
+    <h1>
+      <span class="gold">植物配置</span><br>
+      <span class="green">AI助手</span>
+    </h1>
+    <p class="sub">输入项目条件，AI即时评估植物配置需求——免费，无需等待。</p>
+
+    <!-- 自助评估表单 -->
+    <form class="eval-form" id="evalForm" onsubmit="handleEval(event)">
+      <div class="form-row">
+        <input type="text" id="loc" placeholder="项目城市 *" required>
+        <select id="ptype" onchange="this.className=this.value?'has-value':''">
+          <option value="">项目类型</option>
+          <option value="住宅">住宅</option>
+          <option value="商业">商业/办公</option>
+          <option value="市政/公园">市政/公园</option>
+          <option value="酒店/度假">酒店/度假</option>
+          <option value="小庭院/私宅">小庭院/私宅</option>
+          <option value="学校/医院">学校/医院</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <input type="text" id="area" placeholder="场地面积，如 5000㎡">
+        <select id="budget" onchange="this.className=this.value?'has-value':''">
+          <option value="">维护预算</option>
+          <option value="低">低（粗放管理）</option>
+          <option value="中等">中等（定期外包）</option>
+          <option value="高">高（专职园艺工）</option>
+        </select>
+      </div>
+      <div class="checks">
+        <label><input type="checkbox" name="cond" value="地下车库上方"> 地下车库上方</label>
+        <label><input type="checkbox" name="cond" value="海边/盐碱地"> 海边/盐碱地</label>
+        <label><input type="checkbox" name="cond" value="屋顶花园"> 屋顶花园</label>
+        <label><input type="checkbox" name="cond" value="儿童活动区"> 儿童活动区</label>
+      </div>
+      <button type="submit" class="btn-gold" style="width:100%;justify-content:center;">
+        🔍 免费评估
+      </button>
+    </form>
+
+    <!-- 评估结果 -->
+    <div class="result" id="result"></div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section id="how" class="how">
+  <div class="container">
+    <h2>怎么<span class="gold">工作</span></h2>
+    <p class="section-sub">不是通用AI随便答。是专门为景观设计训练的植物配置Agent。</p>
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <h3>输入项目条件</h3>
+        <p>地点、气候、项目类型（住宅/商业/市政）、风格方向、预算范围、特殊要求。</p>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <h3>AI智能匹配</h3>
+        <p>基于四层知识库（乔木/灌木/地被/棕榈），结合华南20年实战经验，生成配置方案。</p>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <h3>交付可用方案</h3>
+        <p>含植物清单、配置逻辑、养护要点、备选方案。设计师可直接用于方案深化。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Knowledge Base -->
+<section class="kb">
+  <div class="container">
+    <h2>四层<span class="gold">知识库</span></h2>
+    <p class="section-sub">每一层都是华南20年实战经验的沉淀，不是网上爬的资料。</p>
+    <div class="grid">
+      <div class="kb-card">
+        <div class="icon">🌳</div>
+        <h4>乔木层</h4>
+        <p>常绿/落叶、开花/观叶、遮荫/造型。覆盖华南常用200+树种。</p>
+      </div>
+      <div class="kb-card">
+        <div class="icon">🌿</div>
+        <h4>灌木层</h4>
+        <p>色块/绿篱/孤植、耐阴/喜阳。匹配不同下层空间的植物选择。</p>
+      </div>
+      <div class="kb-card">
+        <div class="icon">🌱</div>
+        <h4>地被层</h4>
+        <p>草坪/缀花/覆盖、耐踩/观赏。考虑养护成本和视觉效果平衡。</p>
+      </div>
+      <div class="kb-card">
+        <div class="icon">🌴</div>
+        <h4>棕榈层</h4>
+        <p>华南特色棕榈科植物，从银海枣到狐尾椰子。热带风情的关键一笔。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section class="pricing">
+  <div class="container">
+    <h2>服务<span class="gold">方案</span></h2>
+    <p class="section-sub">定制AI Agent，部署后即可反复使用。一次投入，长期受益。</p>
+    <div class="pricing-card">
+      <div class="tier">FDE Pro · 定制Agent</div>
+      <div class="price">¥18,000</div>
+      <div class="period">一次性 / 含2周调优</div>
+      <p class="desc">针对你的项目类型和植物偏好定制训练，部署为可反复使用的AI Agent。</p>
+      <ul>
+        <li>四层知识库完整接入</li>
+        <li>项目条件智能匹配引擎</li>
+        <li>配置方案+养护建议输出</li>
+        <li>2周免费调优期</li>
+        <li>操作手册+使用培训</li>
+        <li>邮件技术支持（1个月）</li>
+      </ul>
+      <button onclick="copyEmail()" class="btn-gold" style="width:100%;justify-content:center;">立即咨询</button>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <h2>准备好<span class="gold">深入</span>了吗？</h2>
+    <p class="sub">上面评估适合你的项目类型吗？想要定制专属Agent，直接联系我们。</p>
+    <button onclick="copyEmail()" class="btn-gold">
+      ✉️ esopin@qq.com
+    </button>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="links">
+      <a href="https://mygongfu.com">朴风首页</a>
+      <a href="https://geo.mygongfu.com">GEO诊断</a>
+      <a href="https://fde.mygongfu.com">FDE搭建</a>
+      <a href="https://dmd.mygongfu.com">DMD知识库</a>
+    </div>
+    <p>© 2026 朴风 Pu Feng · AI辅助景观设计</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ---- 邮箱复制 ----
+function copyEmail() {
+  const email = 'esopin@qq.com';
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(email).then(() => showToast('邮箱已复制：' + email)).catch(() => showToast(email, true));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = email; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); showToast('邮箱已复制：' + email); } catch(e) { showToast(email, true); }
+    document.body.removeChild(ta);
+  }
+}
+function showToast(msg, isError) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isError ? ' error' : '') + ' show';
+  clearTimeout(t._timeout);
+  t._timeout = setTimeout(() => { t.className = 'toast'; }, 2500);
+}
+
+// ---- 自助评估 ----
+const API_URL = 'https://andy2025ai--pufeng-plant-eval-serve.modal.run/api/evaluate';
+
+async function handleEval(e) {
+  e.preventDefault();
+  const result = document.getElementById('result');
+  result.className = 'result';
+  result.innerHTML = '<div class="loading-text"><span class="spinner"></span>AI正在评估你的项目…</div>';
+  result.classList.add('show');
+
+  const specials = [];
+  document.querySelectorAll('input[name="cond"]:checked').forEach(cb => specials.push(cb.value));
+
+  const payload = {
+    location: document.getElementById('loc').value.trim(),
+    project_type: document.getElementById('ptype').value,
+    site_area: document.getElementById('area').value.trim() || '未提供',
+    special_conditions: specials,
+    budget: document.getElementById('budget').value || '未提供',
+    has_maintenance: document.getElementById('budget').value === '高'
+  };
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (data.error) { result.innerHTML = '<p style="color:#FF6666">⚠️ ' + data.error + '</p>'; return; }
+    renderResult(data);
+  } catch(err) {
+    result.innerHTML = '<p style="color:#FF6666">⚠️ 网络错误，请重试。或直接发邮件至 esopin@qq.com</p>';
+  }
+}
+
+function renderResult(d) {
+  const badgeClass = d.grade === 'L1' ? 'l1' : d.grade === 'L2' ? 'l2' : 'l3';
+  let html = '<span class="grade-badge ' + badgeClass + '">' + d.grade + ' · ' + d.region + '</span>';
+  html += '<h3>' + d.grade_desc + '</h3>';
+
+  // Agent 适配分
+  html += '<div class="score">' + d.agent_fit.score + '<span>分 / 适配度</span></div>';
+  d.agent_fit.reasons.forEach(r => { html += '<div class="item">✅ ' + r + '</div>'; });
+
+  // 区域特征
+  html += '<div class="section-title">🌍 ' + d.region + ' · ' + d.region_climate + '</div>';
+
+  // 关注重点
+  if (d.focus_areas.length) {
+    html += '<div class="section-title">🎯 重点方向</div>';
+    d.focus_areas.forEach(f => { html += '<div class="item">· ' + f + '</div>'; });
+  }
+
+  // 挑战
+  if (d.challenges.length) {
+    html += '<div class="section-title">⚠️ 关键挑战</div>';
+    d.challenges.forEach(c => { html += '<div class="item">' + c + '</div>'; });
+  }
+
+  // 警告
+  if (d.warnings.length) {
+    html += '<div class="section-title">🚫 避坑提示</div>';
+    d.warnings.forEach(w => { html += '<div class="item">' + w + '</div>'; });
+  }
+
+  // CTA
+  html += '<div class="cta-box"><p>' + d.next_step + '</p>';
+  html += '<button onclick="copyEmail()" class="btn-gold">📋 复制邮箱 · esopin@qq.com</button></div>';
+
+  const result = document.getElementById('result');
+  result.innerHTML = html;
+  result.classList.add('show');
+  result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+</script>
+</body>
+</html>

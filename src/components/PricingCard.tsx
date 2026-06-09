@@ -1,4 +1,5 @@
-import { Check, Star } from 'lucide-react';
+import { Check, Star, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface PricingCardProps {
   name: string;
@@ -7,9 +8,29 @@ interface PricingCardProps {
   features: string[];
   isPopular?: boolean;
   buttonText: string;
+  action?: 'scroll' | 'link' | 'external';
+  path?: string;
+  isMonthly?: boolean;
 }
 
-export default function PricingCard({ name, price, description, features, isPopular, buttonText }: PricingCardProps) {
+export default function PricingCard({ name, price, description, features, isPopular, buttonText, action, path, isMonthly }: PricingCardProps) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (action === 'external' && path) {
+      window.location.href = path;
+    } else if (action === 'link' && path) {
+      navigate(path);
+    } else if (action === 'scroll') {
+      const heroSection = document.getElementById('hero-diagnosis');
+      if (heroSection) {
+        heroSection.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        navigate('/');
+      }
+    }
+  };
+
   return (
     <div className={`relative glass rounded-3xl p-8 transition-all duration-500 hover:transform hover:-translate-y-2 ${
       isPopular
@@ -30,7 +51,7 @@ export default function PricingCard({ name, price, description, features, isPopu
 
       <div className="mb-8">
         <span className="text-4xl font-bold gradient-text">{price}</span>
-        {price !== '免费' && <span className="text-gray-400 ml-2">/月</span>}
+        {isMonthly && price !== '免费' && <span className="text-gray-400 ml-2">/月</span>}
       </div>
 
       <ul className="space-y-4 mb-8">
@@ -43,13 +64,15 @@ export default function PricingCard({ name, price, description, features, isPopu
       </ul>
 
       <button
-        className={`w-full py-4 rounded-full font-semibold transition-all duration-300 ${
+        onClick={handleClick}
+        className={`w-full py-4 rounded-full font-semibold transition-all duration-300 flex items-center justify-center space-x-2 ${
           isPopular
-            ? 'btn-primary text-white'
-            : 'border border-white/20 text-white hover:border-primary hover:text-primary'
+            ? 'btn-gold'
+            : 'border border-white/40 text-gray-300 hover:border-primary hover:text-primary'
         }`}
       >
-        {buttonText}
+        <span>{buttonText}</span>
+        <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
       </button>
     </div>
   );

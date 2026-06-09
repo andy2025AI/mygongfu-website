@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Mail, ArrowRight, CheckCircle2, Loader2 } from 'lucide-react';
 
-const SUBSCRIBE_URL = 'https://andy2025ai--pufeng-geo-diagnosis-v3-fastapi-app.modal.run/api/subscribe';
+const SUBSCRIBE_URL = 'https://andy2025ai--pufeng-geo-diagnosis-fastapi-app.modal.run/subscribe';
 
 export default function Newsletter() {
   const [email, setEmail] = useState('');
@@ -49,20 +49,20 @@ export default function Newsletter() {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto">
-          <div className="glass rounded-3xl p-8 md:p-12 text-center">
+          <div className=" rounded-3xl p-8 md:p-12 text-center">
             <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-6">
               <Mail className="text-white" size={32} />
             </div>
 
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              <span className="gradient-text">订阅GEO周报</span>
+              <span className="gold-text">订阅GEO周报</span>
             </h2>
             <p className="text-gray-400 text-lg mb-8 max-w-2xl mx-auto">
               每周获取最新的AI搜索趋势、品牌优化技巧和独家案例分析。让你的品牌始终走在AI时代前沿。
             </p>
 
             {isSubscribed ? (
-              <div className="flex items-center justify-center space-x-3 text-green-400">
+              <div className="flex items-center justify-center space-x-3 text-[#00E676]">
                 <CheckCircle2 size={28} />
                 <span className="text-xl font-semibold">订阅成功！感谢您的关注</span>
               </div>
@@ -76,12 +76,12 @@ export default function Newsletter() {
                     placeholder="输入您的邮箱地址"
                     required
                     disabled={loading}
-                    className="flex-1 px-6 py-4 bg-dark border border-white/10 rounded-full text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 transition-all duration-300 disabled:opacity-50"
+                    className="flex-1 px-6 py-4 bg-black border border-white/10 rounded-full text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 transition-all duration-300 disabled:opacity-50"
                   />
                   <button
                     type="submit"
                     disabled={loading}
-                    className="btn-primary px-8 py-4 rounded-full text-white font-semibold flex items-center justify-center space-x-2 whitespace-nowrap disabled:opacity-50"
+                    className="btn-gold px-8 py-4 rounded-full font-semibold flex items-center justify-center space-x-2 whitespace-nowrap disabled:opacity-50"
                   >
                     {loading ? (
                       <Loader2 size={20} className="animate-spin" />

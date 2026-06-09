@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Search, ArrowRight, Sparkles, X, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 
-const API_URL = 'https://andy2025ai--pufeng-geo-diagnosis-v3-fastapi-app.modal.run/api/diagnose';
+const API_URL = 'https://andy2025ai--pufeng-geo-diagnosis-fastapi-app.modal.run/';
 
 interface DiagnosisResult {
   brand_name: string;
@@ -9,7 +10,7 @@ interface DiagnosisResult {
   scores: { overall: number; platform_coverage: number; ai_awareness: number };
   keyword_scores: Record<string, { score: number; results: number }>;
   platform_coverage: Record<string, { found: boolean; status?: number }>;
-  ai_awareness: Record<string, { found: boolean }>;
+  ai_awareness: Record<string, { found: boolean; sources_found?: number; total_sources?: number }>;
   gaps: string[];
   actions: string[];
   generated_at: string;
@@ -77,19 +78,13 @@ export default function Hero() {
   };
 
   const scoreColor = (s: number) => {
-    if (s >= 70) return 'text-green-400';
-    if (s >= 40) return 'text-yellow-400';
+    if (s >= 70) return 'text-[#00E676]';
+    if (s >= 40) return 'text-[#FFD700]';
     return 'text-red-400';
   };
 
   return (
-    <section className="hero-bg min-h-screen flex items-center justify-center relative pt-20">
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '-3s' }}></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/10 rounded-full blur-3xl"></div>
-      </div>
-
+    <section id="hero-diagnosis" className="hero-bg min-h-screen flex items-center justify-center relative pt-20">
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           <div className="fade-in-up" style={{ animationDelay: '0.2s' }}>
@@ -100,9 +95,9 @@ export default function Hero() {
           </div>
 
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 fade-in-up" style={{ animationDelay: '0.4s' }}>
-            <span className="gradient-text">
+            <span className="gold-text">
               {typingText}
-              <span className="animate-pulse">|</span>
+              <span>|</span>
             </span>
           </h1>
 
@@ -117,14 +112,15 @@ export default function Hero() {
                   type="text"
                   value={brandName}
                   onChange={(e) => setBrandName(e.target.value)}
-                  placeholder="输入品牌名，比如 腾讯、小米、字节跳动…"
+                  placeholder="输入品牌名即可免费诊断，比如 腾讯、小米、字节跳动…"
                   disabled={loading}
-                  className="w-full px-6 py-4 bg-dark-light border border-white/10 rounded-full text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 transition-all duration-300 disabled:opacity-50"
+                  className="w-full px-6 py-4 bg-black border border-white/10 rounded-full text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 transition-all duration-300 disabled:opacity-50"
                 />
                 <button
                   type="submit"
                   disabled={loading || !brandName.trim()}
-                  className="btn-primary px-8 py-4 rounded-full text-white font-semibold flex items-center justify-center space-x-2 whitespace-nowrap animate-pulse-glow disabled:opacity-50 disabled:cursor-not-allowed"
+                  title={!brandName.trim() ? '请先输入品牌名' : ''}
+                  className="btn-gold px-8 py-4 rounded-full font-semibold flex items-center justify-center space-x-2 whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {loading ? (
                     <Loader2 size={20} className="animate-spin" />
@@ -142,7 +138,7 @@ export default function Hero() {
                   onChange={(e) => setKeywords(e.target.value)}
                   placeholder="每行一个关键词&#10;景观设计&#10;园林工程"
                   rows={3}
-                  className="mt-2 w-full px-4 py-3 bg-dark-light border border-white/10 rounded-xl text-white placeholder-gray-500 text-sm focus:outline-none focus:border-primary/50"
+                  className="mt-2 w-full px-4 py-3 bg-black border border-white/10 rounded-xl text-white placeholder-gray-500 text-sm focus:outline-none focus:border-primary/50"
                 />
               </details>
             </form>
@@ -175,7 +171,7 @@ export default function Hero() {
           {/* Results */}
           {result && !loading && (
             <div className="fade-in-up max-w-2xl mx-auto">
-              <div className="glass rounded-3xl p-6 md:p-8 mb-4">
+              <div className=" rounded-3xl p-6 md:p-8 mb-4">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-xl font-bold text-white">{result.brand_name}</h3>
                   <button onClick={resetForm} className="text-gray-500 hover:text-white p-1">
@@ -205,7 +201,7 @@ export default function Hero() {
                   <div className="grid grid-cols-2 gap-2">
                     {Object.entries(result.platform_coverage).map(([name, info]) => (
                       <div key={name} className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${
-                        info.found ? 'bg-green-500/10 text-green-300' : 'bg-red-500/10 text-red-300'
+                        info.found ? 'bg-[#00E676]/10 text-[#00E676]' : 'bg-red-500/10 text-red-300'
                       }`}>
                         <span>{info.found ? '✅' : '❌'}</span>
                         <span>{name}</span>
@@ -214,13 +210,33 @@ export default function Hero() {
                   </div>
                 </div>
 
+                {/* AI引擎覆盖 */}
+                <div className="mb-4">
+                  <h4 className="text-sm font-semibold text-gray-400 mb-2 text-left">AI引擎覆盖</h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    {Object.entries(result.ai_awareness).map(([name, info]) => (
+                      <div key={name} className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${
+                        info.found ? 'bg-[#00E676]/10 text-[#00E676]' : 'bg-red-500/10 text-red-300'
+                      }`}>
+                        <span>{info.found ? '✅' : '❌'}</span>
+                        <div className="flex-1">
+                          <span>{name}</span>
+                          <span className={`ml-2 text-xs ${info.found ? 'text-[#00E676]/70' : 'text-red-400/70'}`}>
+                            {info.sources_found || 0}/{info.total_sources || 0} 源
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
                 {/* Gaps */}
                 {result.gaps.length > 0 && (
                   <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4 mb-4 text-left">
-                    <h4 className="text-sm font-semibold text-yellow-400 mb-2">待优化项</h4>
+                    <h4 className="text-sm font-semibold text-[#FFD700] mb-2">待优化项</h4>
                     <ul className="space-y-1">
                       {result.gaps.map((g, i) => (
-                        <li key={i} className="text-yellow-200 text-sm">• {g}</li>
+                        <li key={i} className="text-[#FFD700] text-sm">• {g}</li>
                       ))}
                     </ul>
                   </div>
@@ -237,9 +253,57 @@ export default function Hero() {
                     </ul>
                   </div>
                 )}
-              </div>
 
-              <p className="text-gray-500 text-xs">
+                {/* GEO Diagnosis ¥299 — upsell after free result */}
+                <div className="mt-6 p-6 card border-gold/30 rounded-2xl">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="text-lg font-bold text-gold">AI可见度诊断 · 完整PDF报告</h4>
+                    <span className="text-2xl font-bold text-gold">¥299</span>
+                  </div>
+                  <p className="text-gray-300 text-sm mb-4 text-left">
+                    包含完整平台数据、竞品对比、情感倾向分析和可执行优化路线图，PDF格式即时生成。
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Link
+                      to="/payment"
+                      className="flex-1 px-6 py-3 btn-gold font-semibold rounded-xl text-center transition-all"
+                    >
+                      购买完整版 ¥299 →
+                    </Link>
+                    <button
+                      onClick={async () => {
+                        try {
+                          const res = await fetch('https://andy2025ai--pufeng-geo-pdf-v3-api.modal.run/api/diagnose-pdf', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                              brand_name: result.brand_name,
+                              keywords: Object.keys(result.keyword_scores || {})
+                            }),
+                          });
+                          if (!res.ok) throw new Error('生成失败');
+                          const blob = await res.blob();
+                          const url = URL.createObjectURL(blob);
+                          const a = document.createElement('a');
+                          a.href = url;
+                          a.download = `AI可见度诊断报告-${result.brand_name}.pdf`;
+                          a.click();
+                          URL.revokeObjectURL(url);
+                        } catch (e) {
+                          alert('PDF生成失败，请联系 esopin@QQ.com');
+                        }
+                      }}
+                      className="flex-1 px-6 py-3 border border-white/40 text-gray-300 font-semibold rounded-xl transition-all hover:border-primary hover:text-primary"
+                    >
+                      免费预览样张 ↓
+                    </button>
+                  </div>
+                  <p className="text-gray-500 text-xs mt-3">
+                    先下载样张了解报告质量 → 满意后邮件购买完整版
+                  </p>
+                </div>
+              </div>
+              <p className="text-gray-500 text-xs mb-0">
                 数据仅供参考 · 基于公开内容平台检测 · {result.generated_at?.slice(0, 10)}
               </p>
             </div>
@@ -253,12 +317,6 @@ export default function Hero() {
               </div>
             </div>
           )}
-        </div>
-      </div>
-
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-white/50 rounded-full mt-2 animate-pulse"></div>
         </div>
       </div>
     </section>

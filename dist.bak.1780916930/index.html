@@ -41,17 +41,6 @@
         letter-spacing: -0.025em;
       }
     </style>
-    <script type="module">
-      if (import.meta.hot?.on) {
-        import.meta.hot.on('vite:error', (error) => {
-          if (error.err) {
-            console.error(
-              [error.err.message, error.err.frame].filter(Boolean).join('\n'),
-            )
-          }
-        })
-      }
-    </script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -71,24 +60,10 @@
       "description": "一人公司AI工具箱，提供GEO品牌诊断、FDE系统搭建、植物配置AI服务。"
     }
     </script>
+    <script type="module" crossorigin src="/assets/index-D5_v6eRU.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BWuUePoP.css">
   </head>
   <body>
-    <noscript>
-      <div style="padding: 40px; text-align: center; background: #000; color: #FFD700; min-height: 100vh;">
-        <h1>朴风 · 一人公司AI工具箱</h1>
-        <p style="color: #a0a0a0; margin-top: 20px;">
-          本站需要启用 JavaScript 才能正常显示内容。
-        </p>
-        <p style="color: #666; margin-top: 12px; font-size: 14px;">
-          This site requires JavaScript to function properly.
-        </p>
-        <hr style="margin: 40px auto; width: 60px; border-color: #333;" />
-        <div style="color: #888; font-size: 13px;">
-          <p>GEO品牌AI可见度诊断 · FDE系统搭建 · 植物配置AI</p>
-          <p style="margin-top: 8px;">联系方式：esopin@qq.com</p>
-        </div>
-      </div>
-    </noscript>
     <div id="root">
       <div class="loading-shell">
         <div class="brand">
@@ -97,6 +72,5 @@
         </div>
       </div>
     </div>
-    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -1,8 +1,7 @@
-import { Search, Bot, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Search, Bot, Leaf, ArrowRight } from 'lucide-react';
 
 interface ServiceCardProps {
-  icon: 'search' | 'bot';
+  icon: 'search' | 'bot' | 'leaf';
   title: string;
   description: string;
   features: string[];
@@ -11,10 +10,11 @@ interface ServiceCardProps {
 }
 
 export default function ServiceCard({ icon, title, description, features, path, gradient }: ServiceCardProps) {
-  const IconComponent = icon === 'search' ? Search : Bot;
+  const iconMap = { search: Search, bot: Bot, leaf: Leaf };
+  const IconComponent = iconMap[icon];
 
   return (
-    <div className="glass rounded-3xl p-8 transition-all duration-500 hover:transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/20 group">
+    <div className="bg-black rounded-3xl p-8 transition-all duration-500 hover:transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/20 group">
       <div className={`w-16 h-16 rounded-2xl ${gradient} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
         <IconComponent className="text-white" size={32} />
       </div>
@@ -36,13 +36,13 @@ export default function ServiceCard({ icon, title, description, features, path, 
         ))}
       </ul>
 
-      <Link
-        to={path}
+      <a
+        href={path}
         className="inline-flex items-center space-x-2 text-primary font-semibold hover:space-x-4 transition-all duration-300"
       >
         <span>了解详情</span>
         <ArrowRight size={18} className="transition-transform duration-300 group-hover:translate-x-2" />
-      </Link>
+      </a>
     </div>
   );
 }
